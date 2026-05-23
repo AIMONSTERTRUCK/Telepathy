@@ -1,0 +1,21 @@
+{
+  "name": "telepathy-game",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+<<<<<<< HEAD
+    "@google-cloud/translate": "^9.4.1",
+    "deepl-node": "^1.27.0",
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  }
+}
+=======
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  }
+}
+>>>>>>> d8a09b5105dfeb45161709f166bd5ac0ba91004a

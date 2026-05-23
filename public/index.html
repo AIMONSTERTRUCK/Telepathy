@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Telepathy</title>
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#0f1117;
+    color:white;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.container{
+    width:100%;
+    max-width:700px;
+    background:#1a1d26;
+    border-radius:18px;
+    padding:30px;
+    box-shadow:0 0 25px rgba(0,0,0,.4);
+}
+
+h1{
+    text-align:center;
+    margin-bottom:20px;
+    font-size:42px;
+}
+
+.subtitle{
+    text-align:center;
+    color:#999;
+    margin-bottom:25px;
+}
+
+input{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    background:#2a2f3d;
+    color:white;
+    margin-bottom:15px;
+    font-size:16px;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    background:#5865f2;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+button:hover{
+    background:#4752c4;
+}
+
+.hidden{
+    display:none;
+}
+
+.players{
+    margin-top:20px;
+}
+
+.player{
+    padding:10px;
+    background:#252937;
+    border-radius:8px;
+    margin-bottom:8px;
+}
+
+.wordReveal{
+    margin-top:25px;
+}
+
+<<<<<<< HEAD
+/* Word card: shows the typed word and, if different, the English translation */
+=======
+>>>>>>> d8a09b5105dfeb45161709f166bd5ac0ba91004a
+.wordCard{
+    background:#252937;
+    padding:14px;
+    border-radius:10px;
+    margin-bottom:10px;
+}
+
+<<<<<<< HEAD
+.wordCard .typed{
+    font-size:16px;
+}
+
+.wordCard .translation{
+    font-size:13px;
+    color:#8a9bc4;
+    margin-top:4px;
+}
+
+=======
+>>>>>>> d8a09b5105dfeb45161709f166bd5ac0ba91004a
+.winners{
+    margin-top:25px;
+    padding:20px;
+    background:#1f3a2d;
+    border:1px solid #3ba55d;
+    border-radius:12px;
+}
+
+.winnerText{
+    color:#57f287;
+    font-size:22px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.status{
+    margin-top:15px;
+    text-align:center;
+    color:#aaa;
+}
+
+.roomCode{
+    margin-top:10px;
+    text-align:center;
+    color:#5865f2;
+    font-weight:bold;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div id="joinScreen">
+    <h1>Telepathy</h1>
+    <p class="subtitle">Think alike or lose.</p>
+
+    <input id="nameInput" placeholder="Enter your name"/>
+    <input id="roomInput" placeholder="Room code (example: ABC123)"/>
+
+    <button onclick="joinRoom()">Join Game</button>
+</div>
+
+<div id="gameScreen" class="hidden">
+    <h1>Telepathy</h1>
+
+    <div class="roomCode" id="roomCodeDisplay"></div>
+
+    <div class="players">
+        <h3>Players</h3>
+        <div id="playerList"></div>
+    </div>
+
+    <div style="margin-top:25px;">
+        <input id="wordInput" placeholder="Type your word and press submit"/>
+        <button onclick="submitWord()">Submit Word</button>
+    </div>
+
+    <div class="status" id="status">
+        Waiting for submissions...
+    </div>
+
+    <div class="wordReveal" id="reveals"></div>
+
+    <div id="winnerBox"></div>
+</div>
+
+</div>
+
+
+<script>
+const socket = io();
+
+let currentRoom = "";
+let submitted = false;
+
+function joinRoom(){
+    const name = document.getElementById("nameInput").value.trim();
+    const room = document.getElementById("roomInput").value.trim().toUpperCase();
+
+    if(!name || !room) return;
+
+    currentRoom = room;
+
+    socket.emit("joinRoom", { name, room });
+
+    document.getElementById("joinScreen").classList.add("hidden");
+    document.getElementById("gameScreen").classList.remove("hidden");
+
+    document.getElementById("roomCodeDisplay").innerText = "Room: " + room;
+}
+
+function submitWord(){
+    if(submitted) return;
+
+    const word = document.getElementById("wordInput").value.trim();
+    if(!word) return;
+
+    submitted = true;
+<<<<<<< HEAD
+    document.getElementById("status").innerText = "Translating & submitting...";
+=======
+>>>>>>> d8a09b5105dfeb45161709f166bd5ac0ba91004a
+
+    socket.emit("submitWord", {
+        room: currentRoom,
+        word
+    });
+
+    document.getElementById("status").innerText = "Waiting...";
+}
+
+<<<<<<< HEAD
+// ENTER key submits
+=======
+// ✅ ENTER key submits
+>>>>>>> d8a09b5105dfeb45161709f166bd5ac0ba91004a
+document.getElementById("wordInput").addEventListener("keydown", e => {
+    if(e.key === "Enter"){
+        submitWord();
+    }
+});
+
+<<<<<<< HEAD
+// Show checkmarks next to submitted players
+=======
+// ✅ show checkmarks
+>>>>>>> d8a09b5105dfeb45161709f166bd5ac0ba91004a
+socket.on("playerUpdate", players => {
+    const list = document.getElementById("playerList");
+    list.innerHTML = "";
+
+    players.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "player";
+<<<<<<< HEAD
+        div.innerHTML = `${p.name}${p.submitted ? " ✅" : ""}`;
+=======
+
+        div.innerHTML = `
+            ${p.name}
+            ${p.submitted ? " ✅" : ""}
+        `;
+
+>>>>>>> d8a09b5105dfeb45161709f166bd5ac0ba91004a
+        list.appendChild(div);
+    });
+});
+
+socket.on("duplicateWord", () => {
+    submitted = false;
+    document.getElementById("status").innerText =
+        "Word already used before. Try again.";
+});
+
+socket.on("allWords", data => {
+    submitted = false;
+<<<<<<< HEAD
+=======
+
+>>>>>>> d8a09b5105dfeb45161709f166bd5ac0ba91004a
+    document.getElementById("wordInput").value = "";
+
+    const reveals = document.getElementById("reveals");
+    reveals.innerHTML = "";
+
+    data.words.forEach(entry => {
+        const div = document.createElement("div");
+        div.className = "wordCard";
+<<<<<<< HEAD
+
+        // If the player typed something other than English, show both
+        const isTranslated = entry.display.toLowerCase() !== entry.word.toLowerCase();
+
+        div.innerHTML = `
+            <div class="typed">
+                <strong>${entry.name}</strong>: ${entry.display}
+            </div>
+            ${isTranslated
+                ? `<div class="translation">→ "${entry.word}" (translated)</div>`
+                : ""}
+        `;
+
+=======
+        div.innerHTML = `<strong>${entry.name}</strong>: ${entry.word}`;
+>>>>>>> d8a09b5105dfeb45161709f166bd5ac0ba91004a
+        reveals.appendChild(div);
+    });
+
+    document.getElementById("status").innerText = "Round complete.";
+});
+
+socket.on("winners", winners => {
+    const box = document.getElementById("winnerBox");
+
+    if(winners.length === 0){
+        box.innerHTML = "";
+        return;
+    }
+
+    let html = `
+        <div class="winners">
+<<<<<<< HEAD
+            <div class="winnerText">Match Found</div>
+    `;
+
+    winners.forEach(w => {
+        const isTranslated = w.display && w.display.toLowerCase() !== w.word.toLowerCase();
+        html += `<div>
+            ${w.name} matched "${w.word}"
+            ${isTranslated ? `<span style="color:#8a9bc4;font-size:13px;">(typed "${w.display}")</span>` : ""}
+        </div>`;
+    });
+
+    html += `</div>`;
+=======
+            <div class="winnerText">
+                Match Found
+            </div>
+    `;
+
+    winners.forEach(w => {
+        html += `<div>${w.name} matched "${w.word}"</div>`;
+    });
+
+    html += `</div>`;
+
+>>>>>>> d8a09b5105dfeb45161709f166bd5ac0ba91004a
+    box.innerHTML = html;
+
+    setTimeout(() => {
+        document.getElementById("reveals").innerHTML = "";
+        document.getElementById("winnerBox").innerHTML = "";
+<<<<<<< HEAD
+        document.getElementById("status").innerText = "New round started.";
+=======
+        document.getElementById("status").innerText =
+            "New round started.";
+>>>>>>> d8a09b5105dfeb45161709f166bd5ac0ba91004a
+    }, 5000);
+});
+</script>
+
+</body>
+<<<<<<< HEAD
+</html>
+=======
+</html>
+>>>>>>> d8a09b5105dfeb45161709f166bd5ac0ba91004a
