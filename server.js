@@ -15,7 +15,7 @@ const rooms = {};
 
 // ─── DeepL Translation ────────────────────────────────────────────────────────
 
-const DEEPL_API_KEY = process.env.87e09846-17b5-4163-b5b5-0f42c8398b12:fx;
+const DEEPL_API_KEY = process.env.DEEPL_API_KEY;
 
 // Detect whether the key is a Free-tier key (ends in ":fx") or Pro
 function getDeepLEndpoint() {
